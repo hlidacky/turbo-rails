@@ -1547,6 +1547,7 @@ class Visit {
         if (this.view.renderPromise) await this.view.renderPromise;
         if (isSuccessful(statusCode) && responseHTML != null) {
           await this.view.renderPage(PageSnapshot.fromHTMLString(responseHTML), false, this.willRender);
+          this.performScroll();
           this.adapter.visitRendered(this);
           this.complete();
         } else {
@@ -1584,6 +1585,7 @@ class Visit {
         } else {
           if (this.view.renderPromise) await this.view.renderPromise;
           await this.view.renderPage(snapshot, isPreview, this.willRender);
+          this.performScroll();
           this.adapter.visitRendered(this);
           if (!isPreview) {
             this.complete();
@@ -1606,6 +1608,7 @@ class Visit {
     if (this.isSamePage) {
       this.render((async () => {
         this.cacheSnapshot();
+        this.performScroll();
         this.adapter.visitRendered(this);
       }));
     }
@@ -1657,7 +1660,7 @@ class Visit {
     this.finishRequest();
   }
   performScroll() {
-    if (!this.scrolled) {
+    if (!this.scrolled && !this.view.forceReloaded) {
       if (this.action == "restore") {
         this.scrollToRestoredPosition() || this.scrollToAnchor() || this.view.scrollToTop();
       } else {
@@ -1724,7 +1727,6 @@ class Visit {
     }));
     await callback();
     delete this.frame;
-    this.performScroll();
   }
   cancelRender() {
     if (this.frame) {
