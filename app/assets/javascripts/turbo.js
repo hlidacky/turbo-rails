@@ -1031,6 +1031,15 @@ class FormLinkInterceptor {
     form.setAttribute("data-turbo", "true");
     form.setAttribute("action", action);
     form.setAttribute("hidden", "");
+    const searchParameters = new URLSearchParams(new URL(action, window.location.toString()).search);
+    for (const [name, value] of searchParameters) {
+      const input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", name);
+      input.setAttribute("value", value);
+
+      form.appendChild(input);
+    };
     const method = link.getAttribute("data-turbo-method");
     if (method) form.setAttribute("method", method);
     const turboFrame = link.getAttribute("data-turbo-frame");
