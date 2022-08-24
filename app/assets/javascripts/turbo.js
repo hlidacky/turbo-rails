@@ -3714,6 +3714,10 @@ if (customElements.get("turbo-stream-source") === undefined) {
   customElements.define("turbo-stream-source", StreamSourceElement);
 }
 
+if (customElements.get("turbo-cable-stream-source") === undefined) {
+  customElements.define("turbo-cable-stream-source", TurboCableStreamSourceElement);
+}
+
 (() => {
   let element = document.currentScript;
   if (!element) return;
@@ -3833,8 +3837,6 @@ class TurboCableStreamSourceElement extends HTMLElement {
     };
   }
 }
-
-customElements.define("turbo-cable-stream-source", TurboCableStreamSourceElement);
 
 function overrideMethodWithFormmethod({detail: {formSubmission: {fetchRequest: fetchRequest, submitter: submitter}}}) {
   if (submitter && submitter.formMethod && fetchRequest.body.has("_method")) {
